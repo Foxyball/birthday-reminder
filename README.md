@@ -1,6 +1,15 @@
 # Birthday-reminder
 A simple tool with web dashboard that sends email notifications to you.
 
+# Login
+Email: admin@balikgstudio.eu
+Pass: password
+
+or 
+
+Email: stefan@balikgstudio.eu
+Pass: stefan
+
 # Path to project
 https://example.com/birthday-reminder/dashboard/
 
