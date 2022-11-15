@@ -4,6 +4,12 @@ A simple tool with web dashboard that sends email notifications to you.
 # Path to project
 https://example.com/birthday-reminder/dashboard/
 
+PHPMailer
+https://github.com/PHPMailer/PHPMailer
+
+AdminLte
+https://adminlte.io/
+
 check.php > You need to create a cronjob for 24h that checks if there are any birthdays today and if true > send an email.
 
 # Preview
