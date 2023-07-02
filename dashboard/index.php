@@ -1,7 +1,9 @@
 <?php
 session_start();
 
-include('../include/connect.php');
+include('include/config.php');
+
+$conn = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 
 //check if user is logged
 if (!isset($_SESSION['admin_logged_in'])) {
@@ -17,7 +19,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Админ панел - Начало</title>
+  <title>Birthday Reminder - Начало</title>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
@@ -108,6 +110,15 @@ if (!isset($_SESSION['admin_logged_in'])) {
                     </div>
                   </div>
 
+
+
+                  <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>Внимание!</strong> Сайтът е в режим на поддръжка.Възможни са проблеми със зареждането на данните или със създаването на нови. Освен това се работи над нова версия на сайта, която ще бъде пусната в близко бъдеще. 
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div> -->
+
                   <!-- Add Modal -->
                   <div class="modal fade" id="staticBackdrop" data-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
@@ -124,6 +135,18 @@ if (!isset($_SESSION['admin_logged_in'])) {
                               <small id="name" class="form-text text-muted">(<span style="color:red;">*</span>) Изберете само <b>Име</b> или <b>Име</b> и <b>Фамилия</b>.</small>
                             </div>
                             <div class="form-group">
+                              <?php $sql4 = "SELECT * FROM categories";
+                              $result4 = $conn->query($sql4);
+                              ?>
+                              <select class="form-control" name="cat_id" id="category" oninvalid="this.setCustomValidity('Моля, изберете категория')" oninput="setCustomValidity('')" required>
+                                <option value="" selected disabled>Изберете категория...</option>
+                                <?php while ($row4 = mysqli_fetch_assoc($result4)) { ?>
+                                  <option value="<?php echo $row4['id']; ?>"><?php echo $row4['cat_name']; ?></option>
+                                <?php } ?>
+                              </select>
+                              <small id="name" class="form-text text-muted">(<span style="color:red;">*</span>) Изберете <b>Категория</b>.</small>
+                            </div>
+                            <div class="form-group">
                               <input type="text" name="birthdate" class="form-control" id="datepicker" placeholder="Изберете дата" oninvalid="this.setCustomValidity('Моля, въведете дата')" oninput="setCustomValidity('')" autocomplete="off" required>
                               <small id="date" class="form-text text-muted">(<span style="color:red;">*</span>) Изберете <b>рождената дата</b>.</small>
                             </div>
@@ -137,6 +160,31 @@ if (!isset($_SESSION['admin_logged_in'])) {
                       </div>
                     </div>
                   </div> <!-- End Add Modal -->
+
+                  <!-- Help Modal -->
+                  <div class="modal fade" id="staticHelp" data-keyboard="true" tabindex="-1" aria-labelledby="staticHelpLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="helpModalLabel">Какво е новото ?</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Легенда.</p>
+                          <span class="badge badge-success">Предстоящ</span> - Рожденици, чийто рожден ден предстои.
+                          <br>
+                          <span class="badge badge-danger">Минал</span> - Рожденици, чийто рожден ден е Минал.
+                          <br>
+                          <span class="badge badge-warning">Днес</span> - Рожденици, чийто рожден ден е Днес.
+                          <br>
+                          <i class="fas fa-birthday-cake"></i> - Рожденици, чийто рожден ден е Днес.
+                          <br>
+                        </div>
+                      </div>
+                    </div>
+                  </div> <!-- End Help Modal -->
 
                 </div><!-- /.container-fluid -->
 
@@ -165,7 +213,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
                 <!-- end error message  -->
 
                 <?php
-                #count total number of birthdays for this month
+                #count total number of birthday_list for this month
                 $sql3 = "SELECT * FROM birthday_list WHERE MONTH(birthdate) = MONTH(CURRENT_DATE())";
                 $count_result = $conn->query($sql3);
                 $count = mysqli_num_rows($count_result);
@@ -176,7 +224,9 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
                 <h3>Рожденици за този месец - <?php if ($count > 0) {
                                                 echo $count;
-                                              } ?></h3>
+                                              } else { ?>
+                    0 <?php } ?>
+                </h3>
                 <table class="table table-bordered table-hover">
                   <thead>
                     <tr>
@@ -188,21 +238,38 @@ if (!isset($_SESSION['admin_logged_in'])) {
                   <tbody>
                     <?php
                     // select all data from db that birthdate is equal to this month
-                    $sql1 = "SELECT * FROM birthday_list WHERE MONTH(birthdate) = MONTH(CURRENT_DATE())";
+                    $sql1 = "SELECT * FROM birthday_list WHERE MONTH(birthdate) = MONTH(CURRENT_DATE()) ORDER BY birthdate ASC";
                     $monthly_result = $conn->query($sql1);
 
                     if ($monthly_result->num_rows > 0) {
                       while ($row = $monthly_result->fetch_assoc()) { ?>
                         <tr>
-                          <td><?php if ($row['birthdate'] < date('d.m.Y')) { ?>
+                          <td>
+                            <?php
+                            // check if birthday is today 
+                            if (date('m-d') == date('m-d', strtotime($row['birthdate']))) { ?>
+                              <span class="badge badge-warning">Днес</span>
+                            <?php } else if (date('m-d') > date('m-d', strtotime($row['birthdate']))) { ?>
                               <span class="badge badge-danger">Минал</span>
                             <?php } else { ?>
                               <span class="badge badge-success">Предстоящ</span>
                             <?php } ?>
                             <!-- end of if -->
                           </td>
-                          <td><?php echo $row['name']; ?></td>
-                          <td><?php echo $row['birthdate']; ?></td>
+                          <td><?php
+                              // echo name and age 
+                              echo $row['name'] . ' (' . date_diff(date_create($row['birthdate']), date_create('today'))->y . ' г.)';
+                              ?></td>
+                          <td><?php
+                              // count month and day until birthday
+                              $date1 = new DateTime(date('Y-m-d'));
+                              $date2 = new DateTime($row['birthdate']);
+                              $interval = $date1->diff($date2);
+                              echo $row['birthdate'] . ' (' . $interval->format('%m месеца и %d дни') . ')';
+
+
+                              ?>
+                          </td>
                         </tr>
                       <?php }
                     } else { ?>
@@ -212,57 +279,80 @@ if (!isset($_SESSION['admin_logged_in'])) {
                     <?php } ?>
                     <!-- end of if while -->
                   </tbody>
-
-                  <!-- list all birthdays -->
-                  <table id="tablica" class="table">
-                    <thead>
-                      <tr>
-                        <th>№</th>
-                        <th>Рожденик <i class="fas fa-birthday-cake"></i> / -</th>
-                        <th>Име</th>
-                        <th>Дата</th>
-                        <th>Действие</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php
-                      $stmt = $conn->prepare("SELECT * FROM birthday_list");
-                      $stmt->execute();
-                      $result = $stmt->get_result();
+                </table>
 
 
-                      if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                          $id = $row['id'];
-                          $name = $row['name'];
-                          $birthdate = $row['birthdate'];
-                      ?>
 
-                          <tr>
-                            <td><?php echo $id; ?></td>
-                            <?php
-                            $today = date("d.m.Y");
 
-                            if ($birthdate == $today) { ?>
-                              <td><i class="fas fa-birthday-cake"></i></td>
-                            <?php } else { ?>
-                              <td>-</td>
-                            <?php } ?>
-                            <td><?php echo $name; ?></td>
-                            <td><?php echo $birthdate; ?></td>
-                            <td>
-                              <a href="edit?editid=<?php echo $id; ?>" class="btn btn-info"><i class="fas fa-edit"></i></a>
-                              <a href="delete?del=<?php echo $id; ?>" class="btn btn-danger btn-del"><i class="fas fa-trash"></i></a>
-                            </td>
-                          </tr>
+
+                <!-- list all birthday_list -->
+                <table id="tablica" class="table">
+                  <thead>
+                    <tr>
+                      <th>№</th>
+                      <th>Име</th>
+                      <th>Дата</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+
+                    
+
+
+                    $stmt = $conn->prepare("SELECT * FROM birthday_list ORDER BY id DESC");
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+
+
+                    if ($result->num_rows > 0) {
+                      while ($row = $result->fetch_assoc()) {
+                        $id = $row['id'];
+                        $name = $row['name'];
+                        $birthdate = $row['birthdate'];
+                        $cat_id = $row['cat_id'];
+
+                        $sql5 = "SELECT * FROM categories WHERE id = $cat_id";
+                        $cat_result = $conn->query($sql5);
+                        $cat_row = $cat_result->fetch_assoc();
+                        $cat_name = $cat_row['cat_name'];
+                    ?>
+
+                        <tr>
+                          <td><?php echo $id; ?></td>
+                          <td><?php echo $name . '(' .$cat_name  . ')' ?></td>
+                          <td><?php
+                              // count month and day until birthday
+                              $date3 = new DateTime(date('Y-m-d'));
+                              $date4 = new DateTime($birthdate);
+                              $interval1 = $date3->diff($date4);
+                              echo $birthdate . ' (' . $interval1->format('%m месеца и %d дни') . ')';
+                              ?></td>
+                          <td>
+                            <a href="edit?editid=<?php echo $id; ?>" class="btn btn-info" title="Редактирай"><i class="fas fa-edit"></i></a>
+                            <a href="delete?del=<?php echo $id; ?>" class="btn btn-danger btn-del" title="Изтрий"><i class="fas fa-trash"></i></a>
+                          </td>
+                        </tr>
 
 
                       <?php }
-                      } ?>
-                      <!-- end of if while -->
-                    </tbody>
-                  </table> <!-- end of table -->
+                    } else { ?>
+                      <tr>
+                        <td colspan="5">Няма рожденици :(</td>
+                      </tr>
+                    <?php } ?>
+                    <!-- end of if while -->
+                  </tbody>
+                </table> <!-- end of table -->
 
+                <!-- Legend -->
+                <span class="badge badge-success">Предстоящ</span> - Рожденици, чийто рожден ден предстои.
+                <br>
+                <span class="badge badge-danger">Минал</span> - Рожденици, чийто рожден ден е Минал.
+                <br>
+                <span class="badge badge-warning">Днес</span> - Рожденици, чийто рожден ден е Днес.
+                <br>
 
               </div>
               <!-- /.content -->
@@ -307,6 +397,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
+                confirmButtonText: 'Да, изтрий!',
+                cancelButtonText: 'Отказ'
               }).then((result) => {
                 if (result.value) {
                   document.location.href = href;
@@ -355,7 +447,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
                 dayNamesShort: ['Нед', 'Пон', 'Вто', 'Сря', 'Чет', 'Пет', 'Съб'],
                 dayNamesMin: ['Не', 'По', 'Вт', 'Ср', 'Че', 'Пе', 'Съ'],
                 weekHeader: 'Wk',
-                dateFormat: 'dd.mm.yy',
+                dateFormat: 'yy-mm-dd',
                 firstDay: 1,
                 isRTL: false,
                 showMonthAfterYear: false,
@@ -366,14 +458,15 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
 
             // formatting the datepicker to dd.mm.yyyy
-            jQuery(function(a) {
-              $("#datepicker").datepicker({
-                dateFormat: 'dd.mm.yy',
-                changeYear: true,
-                viewMode: "years",
-                minViewMode: "years"
-              });
-            });
+            //   jQuery(function(a) {
+            //     $("#datepicker").datepicker({
+            //       dateFormat: 'dd.mm.yy',
+            //       changeYear: true,
+            //       viewMode: "years",
+            //       minViewMode: "years"
+            //     });
+            //   });
+            // 
           </script> <!-- end of datepicker -->
 
 
