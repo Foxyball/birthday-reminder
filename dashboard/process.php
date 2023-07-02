@@ -14,9 +14,10 @@ if (!isset($_SESSION['admin_logged_in'])) {
 if (isset($_POST['add'])) {
     $name = trim(htmlspecialchars($_POST['name']));
     $birthdate = $_POST['birthdate'];
+    $cat_id = $_POST['cat_id'];
 
-    $stmt = $conn->prepare("INSERT INTO birthday_list (name, birthdate) VALUES (?, ?)");
-    $stmt->bind_param("ss", $name, $birthdate);
+    $stmt = $conn->prepare("INSERT INTO birthday_list (name, birthdate,cat_id) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssi", $name, $birthdate,$cat_id);
     $stmt->execute();
 
     $_SESSION['success'] = 'Успешно добавихте рожден ден!';
