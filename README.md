@@ -1,5 +1,5 @@
 # Birthday-reminder
-A simple tool with web dashboard that sends email notifications to you.
+A simple web based birthday reminder that sends email notifications to you.
 
 # Login
 Email: admin@balikgstudio.eu
