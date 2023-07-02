@@ -10,9 +10,6 @@ or
 Email: stefan@balikgstudio.eu
 Pass: stefan
 
-# Path to project
-https://example.com/birthday-reminder/dashboard/
-
 PHPMailer
 https://github.com/PHPMailer/PHPMailer
 
