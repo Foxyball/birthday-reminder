@@ -47,7 +47,7 @@ CREATE TABLE `admins` (
 
 LOCK TABLES `admins` WRITE;
 /*!40000 ALTER TABLE `admins` DISABLE KEYS */;
-INSERT INTO `admins` VALUES (1,'Христо Събев','admin@balikgstudio.eu','5f4dcc3b5aa765d61d8327deb882cf99','2021-09-16 13:36:10','2022-08-24 17:00:26'),(2,'Стефан Георгиев','stefan@balikgstudio.eu','2e970e822e1a8834203d06abb60f59ec','2022-11-14 18:51:17','2022-11-14 18:50:43');
+INSERT INTO `admins` VALUES (1,'Христо Събев','admin@balikgstudio.eu','5f4dcc3b5aa765d61d8327deb882c','2021-09-16 13:36:10','2022-08-24 17:00:26'),(2,'Стефан Георгиев','stefan@balikgstudio.eu','2e970e822e1a8834203d06abb60f59ec','2022-11-14 18:51:17','2022-11-14 18:50:43');
 /*!40000 ALTER TABLE `admins` ENABLE KEYS */;
 UNLOCK TABLES;
 
