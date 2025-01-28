@@ -1,0 +1,44 @@
+<?php
+// composer require phpmailer/phpmailer
+
+// Load Composer's autoloader
+require '/var/www/projects.balikgstudio.eu/birthday-reminder/dashboard/vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+function sendEmail($to, $subject, $form_message, $from = '', $fromName = 'BalikG Reminder') {
+    // Create an instance of PHPMailer
+    $mail = new PHPMailer(true);
+
+    try {
+        //Server settings
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = '';                     // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = '';        // SMTP username
+        $mail->Password = '';                    // SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;   // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 587;                                    // TCP port to connect to
+        $mail->CharSet = 'UTF-8';
+        $mail->Priority = 1;                                  // Email priority (1 = High, 3 = Normal, 5 = low)
+
+        //Recipients
+        $mail->setFrom($from, $fromName);
+        $mail->addAddress($to);                               // Add a recipient
+        //$mail->addReplyTo('info@example.com', 'Information');
+
+        // Content
+        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->Subject = $subject;
+        $mail->Body    = $form_message;
+        $mail->AltBody = strip_tags($form_message);
+
+        // Send the email
+        $mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
+}
+?>

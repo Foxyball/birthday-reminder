@@ -1,0 +1,10 @@
+# Ignore sensitive files
+config.php
+db_backup/
+smtp.class.php
+
+# Ignore log files
+*.log
+
+# Ignore environment variables
+.env

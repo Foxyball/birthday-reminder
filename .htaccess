@@ -1,0 +1,28 @@
+<ifModule mod_rewrite.c>
+Options -Indexes +FollowSymlinks
+# ErrorDocument 404 /forum/error404.php
+
+RewriteEngine On
+
+#redirect index.php to root directory
+#RewriteRule ^index.php$ https://projects.balikgstudio.eu/birthday-reminder/dashboard/ [R=301,L]
+
+# when opening projects.balikgstudio.eu/birthday-reminder/ redirect to projects.balikgstudio.eu/birthday-reminder/dashboard/
+RewriteCond %{REQUEST_URI} ^/birthday-reminder/$ [NC] 
+RewriteRule ^(.*)$ https://projects.balikgstudio.eu/birthday-reminder/dashboard/ [R=301,L]
+
+
+# remove trailing slashes if it's not a directory
+# you will need this, because if a trailing slash is added wrongly
+# the condition for the next group of rules will fail
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$ http%{ENV:SFORSSL}://%{HTTP_HOST}/$1 [R=301,QSA,L]
+
+# internally rewrite to .php if a file exists
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule (.+) $1.php [QSA,L]
+
+</ifModule>
+
+
+

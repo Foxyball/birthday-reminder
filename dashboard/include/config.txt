@@ -1,0 +1,20 @@
+<?php 
+
+# Debug
+ ini_set('display_errors', 0);
+# error_reporting(E_ALL & ~E_NOTICE);
+
+# General Settings
+define("DOMAIN","projects.balikgstudio.eu/birthday-reminder");
+define("SITE_NAME","Birthday Reminder");
+define("SITE_DESCRIPTION","Birthday Reminder"); 
+
+# MySQL Settings
+define('DB_SERVER', 'localhost');
+define('DB_USERNAME', '');
+define('DB_PASSWORD', '');
+define('DB_NAME', '');
+
+
+    session_start(); 
+?>
