@@ -348,11 +348,10 @@ if ($result->num_rows > 0) {
         <a href="delete?del=<?php echo $id; ?>" class="btn btn-danger btn-del" title="Изтрий"><i class="fas fa-trash"></i></a>
       </td>
     </tr>
-
   <?php }
 } else { ?>
   <tr>
-    <td colspan="5">Няма рожденици :(</td>
+    <td colspan="5">Изглежда, че няма рожденици.</td>
   </tr>
 <?php } ?>
                     <!-- end of if while -->
