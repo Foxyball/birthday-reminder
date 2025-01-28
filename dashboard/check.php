@@ -30,7 +30,7 @@ if ($result->num_rows > 0) {
         $form_message .= "<table border='0' cellpadding='0' cellspacing='0' width='100%'>";
         $form_message .= "<tr><td style='color: #153643; font-size: 24px;'><b>BalikG Reminder!</b></td></tr>";
         $form_message .= "<tr><td style='padding: 20px 0 30px 0; color: #153643; font-size: 16px; line-height: 20px;'>";
-        $form_message .= "<p><i><b>BalikG Reminder</b> Ви напомня, че датата е <b>$today</b> и $name има рожден ден! Пожелайте му нещо приятно!</i></p>";
+        $form_message .= "<p><i><b>BalikG Reminder</b> Ви напомня, че датата е <b>$today</b> и $name има рожден ден! Пожелайте му/й нещо приятно!</i></p>";
         $form_message .= "</td></tr>";
         $form_message .= "<tr><td>";
         $form_message .= "<table border='1' cellpadding='0' cellspacing='0' width='100%' style='border-color: #e0e0e0;'>";
