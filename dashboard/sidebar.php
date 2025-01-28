@@ -3,15 +3,13 @@
     <ul class="nav navbar-nav" role="">
         <li class="dropdown">
             <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false" title="Профил">
-                <?php if (isset($_SESSION['admin_logged_in'])) {
-                    echo $_SESSION['admin_name'];
-                } ?>
+                <i class="fa fa-user"></i>
+                <?php if (isset($_SESSION['admin_logged_in'])) { ?>
+                    <span style="padding-left: 10px;"><?php echo $_SESSION['admin_name']; ?></span>
+                <?php } ?>
             </a>
             <div class="dropdown-menu">
-                <!-- <a class="dropdown-item" href="#">Профил</a> -->
-                <!-- <a class="dropdown-item" href="#">Настройки</a> -->
-                <!-- <div class="dropdown-divider"></div> -->
-                <a class="dropdown-item" href="logout?logout">Изход</a>
+                <a class="dropdown-item" href="logout?logout"><i class="fa fa-sign-out-alt"></i> Изход</a>
             </div>
         </li>
     </ul>
@@ -39,6 +37,7 @@
                         <i class="fa fa-bullhorn nav-icon"></i>
                         <p>Какво е новото?</p>
                     </a>
+                </li>
             </ul>
         </nav>
 
